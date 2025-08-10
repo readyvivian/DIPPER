@@ -115,7 +115,7 @@ cd bin
 | `-I`, `--input-file`     | Input file path <b>(required)</b>:<br>PHYLIP for distance matrix, FASTA for MSA or raw sequences                                   |
 | `-O`, `--output-file`    | Output file path <b>(required)</b>                                                                                                |
 | `-m`, `--algorithm`      | Algorithm selection:<br>`0` - auto <b>(default)</b><br>`1` - force placement<br>`2` - force NJ<br>`3` - divide-and-conquer     |
-| `-p`, `--placement-mode` | Placement mode:<br>`0` - exact<br>`1` - k-closest <b>(default)</b>                                                      |
+| `-K`, `--K-closest` | Placement mode:<br>`-1` - exact<br>`10` - <b>default</b>                                                      |
 | `-k`, `--kmer-size`      | K-mer size (Valid range: 2–15, <b>default: 15</b>)                                                                      |
 | `-s`, `--sketch-size`    | Sketch size (<b>default: 1000</b>)                                                                                    |
 | `-d`, `--distance-type`  | Distance type:<br>`1` - uncorrected<br>`2` - JC <b>(default)</b> <br>`3` - Tajima-Nei<br>`4` - K2P<br>`5` - Tamura<br>`6` - Jinnei |
