@@ -5,16 +5,14 @@
 
 ## <b>Introduction</b> 
 ### <b>Overview</b><a name="overview"></a>
-DIPPER (**DI**stance-based **P**hylogenetic **P**lac**ER**) is an ultrafast tool designed to reconstruct ultralarge phylogenies. 
+
+DIPPER (**DI**stance-based **P**hylogenetic **P**lac**ER**) is a tool for ultrafast and ultralarge phylogenetic reconstruction on GPUs, designed to maintain high accuracy with a minimal memory footprint. DIPPER introduces several innovations, including a divide-and-conquer strategy, a new placement algorithm, and an on-the-fly distance calculator that dynamically enables selective distance computation. In addition, DIPPER addresses the common issue of evolutionary distance underestimation observed in earlier methods—significantly reducing it in its default mode and offering a strict mode that completely eliminates the underestimation. 
 
 <div align="center">
     <div><b>Figure 1: Overview of DIPPER algorithm</b></div>
     <img src="images/overview.png" width="1000"/>
 </div>
 
-### <b>Key Features</b>
-
-#### TBA
 
 <a name="install"></a>
 ## <b>Installation Methods</b>
