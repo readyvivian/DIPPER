@@ -5,16 +5,14 @@
 
 ## <b>Introduction</b> 
 ### <b>Overview</b><a name="overview"></a>
-DIPPER (**DI**stance-based **P**hylogenetic **P**lac**ER**) is an ultrafast tool designed to reconstruct ultralarge phylogenies. 
+
+DIPPER (**DI**stance-based **P**hylogenetic **P**lac**ER**) is a tool for ultrafast and ultralarge phylogenetic reconstruction on GPUs, designed to maintain high accuracy with a minimal memory footprint. DIPPER introduces several innovations, including a divide-and-conquer strategy, a new placement algorithm, and an on-the-fly distance calculator that dynamically enables selective distance computation. In addition, DIPPER addresses the common issue of evolutionary distance underestimation observed in earlier methods—significantly reducing it in its default mode and offering a strict mode that completely eliminates the underestimation. 
 
 <div align="center">
     <div><b>Figure 1: Overview of DIPPER algorithm</b></div>
     <img src="images/overview.png" width="1000"/>
 </div>
 
-### <b>Key Features</b>
-
-#### TBA
 
 <a name="install"></a>
 ## <b>Installation Methods</b>
@@ -115,7 +113,7 @@ cd bin
 | `-I`, `--input-file`     | Input file path <b>(required)</b>:<br>PHYLIP for distance matrix, FASTA for MSA or raw sequences                                   |
 | `-O`, `--output-file`    | Output file path <b>(required)</b>                                                                                                |
 | `-m`, `--algorithm`      | Algorithm selection:<br>`0` - auto <b>(default)</b><br>`1` - force placement<br>`2` - force NJ<br>`3` - divide-and-conquer     |
-| `-p`, `--placement-mode` | Placement mode:<br>`0` - exact<br>`1` - k-closest <b>(default)</b>                                                      |
+| `-K`, `--K-closest` | Placement mode:<br>`-1` - exact<br>`10` - <b>default</b>                                                      |
 | `-k`, `--kmer-size`      | K-mer size (Valid range: 2–15, <b>default: 15</b>)                                                                      |
 | `-s`, `--sketch-size`    | Sketch size (<b>default: 1000</b>)                                                                                    |
 | `-d`, `--distance-type`  | Distance type:<br>`1` - uncorrected<br>`2` - JC <b>(default)</b> <br>`3` - Tajima-Nei<br>`4` - K2P<br>`5` - Tamura<br>`6` - Jinnei |
