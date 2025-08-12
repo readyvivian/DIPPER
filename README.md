@@ -5,7 +5,11 @@
 [license-badge]: https://img.shields.io/badge/License-MIT-yellow.svg 
 [license-link]: https://github.com/TurakhiaLab/DIPPER/blob/main/LICENSE
 
-[![License][license-badge]][license-link] [<img src="https://img.shields.io/badge/Build with-CMake-green.svg?logo=snakemake">](https://cmake.org)
+[<img src="https://img.shields.io/badge/Build with-CMake-green.svg?logo=CMake">](https://cmake.org)
+[<img src="https://img.shields.io/badge/Install with-Docker-informational.svg?logo=Docker">](https://hub.docker.com/r/swalia14/dipper)
+[![DOI](https://img.shields.io/badge/DOI-https://zenodo.org/records/16803048-beige)](https://zenodo.org/records/16803048)
+[![Build Status](https://github.com/TurakhiaLab/panman/actions/workflows/ci.yml/badge.svg)](https://github.com/TurakhiaLab/dipper/actions)
+
 
 <div align="center">
   <img src="docs/images/logo.png"/ width="300">
