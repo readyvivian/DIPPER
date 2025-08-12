@@ -1,6 +1,17 @@
 cmake_minimum_required(VERSION 3.10)
 
-project(msa LANGUAGES CXX CUDA)
+project(dipper LANGUAGES CXX CUDA)
+
+# ------------------ Versioning ------------------
+set(dipper_VERSION "?.?.?")
+execute_process(COMMAND head -n1 ${CMAKE_SOURCE_DIR}/version.txt OUTPUT_VARIABLE VERSION)
+string(REGEX REPLACE "^v([0-9]+)\\..*" "\\1" VERSION_MAJOR "${VERSION}")
+string(REGEX REPLACE "^v[0-9]+\\.([0-9]+).*" "\\1" VERSION_MINOR "${VERSION}")
+string(REGEX REPLACE "^v[0-9]+\\.[0-9]+\\.([0-9]+).*" "\\1" VERSION_PATCH "${VERSION}")
+if("${VERSION_PATCH}" MATCHES "[0-9]+")
+    set(dipper_VERSION "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}")
+endif()
+configure_file(src/version.hpp.in ${CMAKE_SOURCE_DIR}/src/version.hpp)
 
 # For CUDA
 set(CMAKE_CUDA_COMPILER "/usr/local/cuda/bin/nvcc")
