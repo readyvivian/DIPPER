@@ -19,7 +19,7 @@ RUN apt-get update && \
 
 # Install DIPPER
 RUN git clone https://github.com/TurakhiaLab/DIPPER.git && \
-    cd DIPPER/scripts && \
+    cd DIPPER/install && \
     chmod +x installUbuntu.sh && \
     ./installUbuntu.sh && \
     export PATH=/home/DIPPER/bin/:$PATH

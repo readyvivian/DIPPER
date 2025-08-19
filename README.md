@@ -9,7 +9,7 @@
 [<img src="https://img.shields.io/badge/Install with-Docker-informational.svg?logo=Docker">](https://hub.docker.com/r/swalia14/dipper)
 [![DOI](https://img.shields.io/badge/DOI-https://zenodo.org/records/16803048-beige)](https://zenodo.org/records/16803048)
 [![Build Status](https://github.com/TurakhiaLab/panman/actions/workflows/ci.yml/badge.svg)](https://github.com/TurakhiaLab/dipper/actions)
-
+[<img src="https://img.shields.io/badge/Submitted to-bioRxiv-critical.svg?logo=arXiv">](https://doi.org/10.1101/2025.08.12.669583)
 
 <div align="center">
   <img src="docs/images/logo.png"/ width="300">
@@ -208,6 +208,5 @@ Example
 We welcome contributions from the community to enhance the capabilities of **DIPPER**. If you encounter any issues or have suggestions for improvement, please open an issue on [DIPPER GitHub page](https://github.com/TurakhiaLab/DIPPER/issues). For general inquiries and support, reach out to our team.
 
 ##  <a name="cite"></a> Citing DIPPER
-TBA.
-
-
+If you use DIPPER in your research or publications, we kindly request that you cite the following paper: 
+* Sumit Walia, Zexing Chen, Yu-Hsiang Tseng, Yatish Turakhia, "<i>Ultrafast and Ultralarge Distance-Based Phylogenetics Using DIPPER</i>", bioRxiv 2025.08.12.669583; doi: [https://doi.org/10.1101/2025.08.12.669583](https://doi.org/10.1101/2025.08.12.669583)
