@@ -33,7 +33,7 @@ include_directories(${ZLIB_INCLUDE_DIR})
 add_executable (dipper
                 src/tree_generation.cu
                 src/placement.cu
-                src/mash.cu
+               	src/mash.cu
                 src/twoBitCompressor.cpp
                 src/fourBitCompressor.cpp
                 src/matrix_reader.cu
@@ -47,9 +47,28 @@ add_executable (dipper
                 src/divide_and_conquer/placement_close_k.cpp
                 src/divide_and_conquer/placement_close_k.cu)
 
+add_executable (dipper_cpu
+                src/tree_generation.cu
+                src/placement.cu
+                cpu/mash.cu
+                src/twoBitCompressor.cpp
+                src/fourBitCompressor.cpp
+                cpu/matrix_reader.cu
+                src/MSA.cu
+                src/tree.cpp
+                src/neighborJoining.cu
+                cpu/placement_close_k.cu
+                src/divide_and_conquer/mash.cu
+                src/divide_and_conquer/mash.cpp
+                src/divide_and_conquer/msa.cu
+                src/divide_and_conquer/placement_close_k.cpp
+                src/divide_and_conquer/placement_close_k.cu)
+
 find_package(TBB REQUIRED CONFIG)
 set_target_properties(dipper PROPERTIES CUDA_SEPARABLE_COMPILATION ON)
 target_link_libraries(dipper PRIVATE ${Boost_LIBRARIES} ${ZLIB_LIBRARIES} TBB::tbb)
+set_target_properties(dipper_cpu PROPERTIES CUDA_SEPARABLE_COMPILATION ON)
+target_link_libraries(dipper_cpu PRIVATE ${Boost_LIBRARIES} ${ZLIB_LIBRARIES} TBB::tbb)
 
 install(TARGETS dipper
         RUNTIME DESTINATION bin)
