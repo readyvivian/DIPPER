@@ -105,3 +105,5 @@ if (STDCXXFS)
 endif()
 target_link_libraries(dipper PRIVATE ${Boost_LIBRARIES} ${ZLIB_LIBRARIES} TBB::tbb)
 target_link_libraries(dipper_cpu PRIVATE ${Boost_LIBRARIES} ${ZLIB_LIBRARIES} TBB::tbb)
+
+install(TARGETS dipper RUNTIME DESTINATION bin)
