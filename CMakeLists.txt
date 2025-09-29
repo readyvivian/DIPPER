@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.10)
 
 project(dipper LANGUAGES CXX)
 include(CheckLanguage)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
 
 # ------------------ Versioning ------------------
 set(dipper_VERSION "?.?.?")
@@ -104,9 +105,3 @@ if (STDCXXFS)
 endif()
 target_link_libraries(dipper PRIVATE ${Boost_LIBRARIES} ${ZLIB_LIBRARIES} TBB::tbb)
 target_link_libraries(dipper_cpu PRIVATE ${Boost_LIBRARIES} ${ZLIB_LIBRARIES} TBB::tbb)
-
-install(TARGETS dipper
-        RUNTIME DESTINATION bin)
-
-install(TARGETS dipper_cpu
-        RUNTIME DESTINATION bin)
