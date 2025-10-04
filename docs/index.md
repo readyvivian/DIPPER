@@ -33,8 +33,8 @@ docker run -it --gpus all swalia14/dipper:latest
 ```
 #### iii. Run DIPPER
 ```bash
-# Insider docker container
-dipper --help
+# Insider docker container (path: /home/Dipper/bin)
+./dipper --help
 ```
 
 ### 2. Using DockerFile <a name="dockerfile"></a>
@@ -56,8 +56,8 @@ docker run -it --gpus all dipper
 ```
 #### iv. Run DIPPER
 ```bash
-# Insider docker container
-dipper --help
+# Insider docker container (path: /home/Dipper/bin)
+./dipper --help
 ```
 
 ### 3. <a name="script"></a> Using installation script (requires sudo access)  

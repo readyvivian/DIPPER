@@ -7,7 +7,7 @@
 
 [<img src="https://img.shields.io/badge/Build with-CMake-green.svg?logo=CMake">](https://cmake.org)
 [<img src="https://img.shields.io/badge/Install with-Docker-informational.svg?logo=Docker">](https://hub.docker.com/r/swalia14/dipper)
-[![DOI](https://img.shields.io/badge/DOI-https://zenodo.org/records/16803048-beige)](https://zenodo.org/records/16803048)
+[![DOI](https://img.shields.io/badge/DOI-https://zenodo.org/records/17259722-beige)](https://zenodo.org/records/17259722)
 [![Build Status](https://github.com/TurakhiaLab/panman/actions/workflows/ci.yml/badge.svg)](https://github.com/TurakhiaLab/dipper/actions)
 [<img src="https://img.shields.io/badge/Submitted to-bioRxiv-critical.svg?logo=arXiv">](https://doi.org/10.1101/2025.08.12.669583)
 
@@ -31,6 +31,7 @@
     - [Using placement technique](#place)
     - [Using divide-and-conquer technique](#dc)
   - [Adding tips to a backbone tree](#add)
+  - [Reproduce DIPPER results](#reproduce)
 - [Contributions](#contribution)
 - [Citing DIPPER](#cite)
 
@@ -55,8 +56,8 @@ docker run -it --gpus all swalia14/dipper:latest
 ```
 #### iii. Run DIPPER
 ```bash
-# Insider docker container
-dipper --help
+# Insider docker container (path: /home/DIPPER/bin)
+./dipper --help
 ```
 
 ### 2. Using DockerFile <a name="dockerfile"></a>
@@ -78,8 +79,8 @@ docker run -it --gpus all dipper
 ```
 #### iv. Run DIPPER
 ```bash
-# Insider docker container
-dipper --help
+# Insider docker container (path: /home/DIPPER/bin)
+./dipper --help
 ```
 
 ### 3. <a name="script"></a> Using installation script (requires sudo access)  
@@ -126,7 +127,7 @@ For more information about DIPPER's options and instructions, see [wiki](https:/
 
 <b>Note:</b> All the files in the examples below can be found in the `DIPPER/dataset`.
 
-Enter into the bin directory (assuming `$DIPPER_HOME` directs to the DIPPER repository directory). For the docker container `$DIPPER_HOME` is `/home/DIPPER`   
+Enter into the bin directory (assuming `$DIPPER_HOME` directs to the DIPPER repository directory). For the docker container `$DIPPER_HOME` is `/home/DIPPER/bin`   
 ```bash
 cd $DIPPER_HOME/bin
 ./dipper -h
@@ -203,6 +204,9 @@ Example
 ```bash
 ./dipper -i r -o t -m 1 --add -I ../dataset/t2.unaligned.fa -O tree.nwk -t ../dataset/backbone.nwk
 ```
+
+### Reproduce DIPPER results <a name="reproduce"></a>
+To reproduce DIPPER results provided here: [https://zenodo.org/records/17259722](https://zenodo.org/records/17259722), follow the instructions provided in [scripts/reproduce_results.sh](https://github.com/TurakhiaLab/DIPPER/blob/main/scripts/reproduce_results.sh)
 
 ##  <a name="contribution"></a> Contributions
 We welcome contributions from the community to enhance the capabilities of **DIPPER**. If you encounter any issues or have suggestions for improvement, please open an issue on [DIPPER GitHub page](https://github.com/TurakhiaLab/DIPPER/issues). For general inquiries and support, reach out to our team.
