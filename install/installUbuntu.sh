@@ -99,6 +99,6 @@ else
     fi
 fi
 cmake --build . --config Release --parallel
-cmake --install . --prefix ${BIN_DIR}
+# cmake --install . --prefix ${BIN_DIR}
 export PATH=${BIN_DIR}/bin:$PATH
 cd ${BIN_DIR}
