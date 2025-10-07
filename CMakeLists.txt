@@ -85,22 +85,23 @@ elseif(USE_HIP)
 		include_directories("/opt/rocm-${HIP_COMPILE_VERSION}/include/")
 		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O4 -std=c++17 -Wall -g -Wno-sign-compare -Wno-unused-variable -Wno-unused-result -Wno-unused-but-set-variable -Wno-self-assign -Wno-deprecated")
 		
-                set (SRC_FILES  src/hip/tree_generation_hip.cpp
-                                src/hip/placement_hip.cpp
-                                src/hip/mash_hip.cpp
+
+                set (SRC_FILES  src/hip/tree_generation.cu.hip
+                                src/hip/placement.cu.hip
+                                src/hip/mash.cu.hip
                                 src/twoBitCompressor.cpp
                                 src/fourBitCompressor.cpp
-                                src/hip/matrix_reader_hip.cpp
-                                src/hip/MSA_hip.cpp
+                                src/hip/matrix_reader.cu.hip
+                                src/hip/MSA.cu.hip
                                 src/tree.cpp
-                                src/hip/placement_close_k_hip.cpp
-                                src/hip/neighborJoining_hip.cpp
+                                src/hip/neighborJoining.cu.hip
+                                src/hip/placement_close_k.cu.hip
+                                src/hip/divide_and_conquer/mash.cu.hip
                                 src/divide_and_conquer/mash.cpp
+                                src/hip/divide_and_conquer/msa.cu.hip
                                 src/divide_and_conquer/placement_close_k.cpp
-                                src/hip/divide_and_conquer/mash_hip.cpp
-                                src/hip/divide_and_conquer/msa_hip.cpp
-                                src/hip/divide_and_conquer/placement_close_k_hip.cpp
-                        )
+                                src/hip/divide_and_conquer/placement_close_k.cu.hip
+                )
         else()
 	    message(FATAL_ERROR "No HIP found")
 	endif()
