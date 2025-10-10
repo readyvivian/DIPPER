@@ -52,10 +52,10 @@ if(USE_CUDA)
                 message(FATAL_ERROR "No CUDA found")
         endif()
 
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O4 -Wall -g")
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -O4 -Wall -Wextra")
         set(CMAKE_CXX_STANDARD 17)
         set(CMAKE_CXX_STANDARD_REQUIRED ON)
-        set(CMAKE_CUDA_FLAGS "${CMAKE_CUDA_FLAGS} -O4 -rdc=true --extended-lambda -Xcompiler -std=c++17")
+        set(CMAKE_CUDA_FLAGS "${CMAKE_CUDA_FLAGS} -g -O4 -Wall -Wextra -rdc=true --extended-lambda -Xcompiler -std=c++17")
 
         set (SRC_FILES  src/tree_generation.cu
                         src/placement.cu
