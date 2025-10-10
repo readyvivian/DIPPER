@@ -50,7 +50,7 @@ install_tbb() {
     tar -xvzf "${TBB_ARCHIVE}"
     cd "${TBB_DIR_NAME}" || exit 1
     mkdir -p build && cd build
-    cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="${TBB_INSTALL_DIR}"
+    cmake .. -DCMAKE_CXX_FLAGS="-Wno-stringop-overflow" -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="${TBB_INSTALL_DIR}"
     cmake --build . --config Release --parallel
     cmake --install .
 }
