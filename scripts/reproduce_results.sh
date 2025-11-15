@@ -68,12 +68,12 @@ rm DIPPER_data.tar.gz
 
 ################################## SILVA datasets ##################################################
 
-### lsu subunit
-### Download sequences
-wget https://www.arb-silva.de/fileadmin/silva_databases/current/Exports/SILVA_138.2_SSURef_tax_silva_full_align_trunc.fasta.gz -O SILVA_138.2_SSURef_tax_silva_full_align_trunc.fasta.gz
-./dipper -i m -I $PWD/DIPPER_data/SILVA/SILVA_138.2_SSURef_tax_silva_full_align_trunc.fasta.gz -O dipper_silva_lsu -m 1
-
 ### ssu subunit
 ### Download sequences
+wget https://www.arb-silva.de/fileadmin/silva_databases/current/Exports/SILVA_138.2_SSURef_tax_silva_full_align_trunc.fasta.gz -O SILVA_138.2_SSURef_tax_silva_full_align_trunc.fasta.gz
+./dipper -i m -I $PWD/DIPPER_data/SILVA/SILVA_138.2_SSURef_tax_silva_full_align_trunc.fasta.gz -O dipper_silva_ssu -m 1
+
+### lsu subunit
+### Download sequences
 wget https://www.arb-silva.de/fileadmin/silva_databases/current/Exports/SILVA_138.2_LSURef_NR99_tax_silva_full_align_trunc.fasta.gz -O SILVA_138.2_LSURef_NR99_tax_silva_full_align_trunc.fasta.gz
-./dipper -i m -I $PWD/DIPPER_data/SILVA/SILVA_138.2_LSURef_NR99_tax_silva_full_align_trunc.fasta.gz -O dipper_silva_ssu -m 3
+./dipper -i m -I $PWD/DIPPER_data/SILVA/SILVA_138.2_LSURef_NR99_tax_silva_full_align_trunc.fasta.gz -O dipper_silva_lsu -m 3
