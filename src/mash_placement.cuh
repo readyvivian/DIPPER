@@ -179,11 +179,18 @@ namespace MashPlacement
         double * d_dist;
         double * d_len;
         double * d_closest_dis;
+        int * d_closest_branches;
 
         void allocateDeviceArrays (size_t num, int backboneSize=-1);
         void deallocateDeviceArrays ();
         void initializeDeviceArrays(Tree* t);
         void findPlacementTree(
+            Param& params,
+            const MashDeviceArrays& mashDeviceArrays,
+            MatrixReader& matrixReader,
+            const MSADeviceArrays& msaDeviceArrays
+        );
+        void findPlacementTreeBME(
             Param& params,
             const MashDeviceArrays& mashDeviceArrays,
             MatrixReader& matrixReader,
