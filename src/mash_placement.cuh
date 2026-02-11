@@ -196,6 +196,12 @@ namespace MashPlacement
             MatrixReader& matrixReader,
             const MSADeviceArrays& msaDeviceArrays
         );
+        void findPlacementTreeRMSE(
+            Param& params,
+            const MashDeviceArrays& mashDeviceArrays,
+            MatrixReader& matrixReader,
+            const MSADeviceArrays& msaDeviceArrays
+        );
         void addQuery(
             Param& params,
             const MashDeviceArrays& mashDeviceArrays,

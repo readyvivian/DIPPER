@@ -566,7 +566,6 @@ int main(int argc, char** argv) {
             auto createSketchEnd = std::chrono::high_resolution_clock::now();
             std::chrono::nanoseconds createSketchTime = createSketchEnd - createSketchStart; 
             std::cerr << "Sketch Created in: " <<  createSketchTime.count()/1000000 << " ms\n";
-            bool useBME = true;
             if(placemode=="-1"){
                 std::cerr<<"Using exact placement mode\n";
                 MashPlacement::placementDeviceArrays.allocateDeviceArrays(numSequences);
@@ -579,23 +578,23 @@ int main(int argc, char** argv) {
                 MashPlacement::mashDeviceArrays.deallocateDeviceArrays();
                 MashPlacement::placementDeviceArrays.deallocateDeviceArrays();
             }
-            else if(useBME){
-                std::cerr<<"Using k-closest placement mode\n";
-                MashPlacement::kplacementDeviceArrays.allocateDeviceArrays(numSequences);
-                auto createTreeStart = std::chrono::high_resolution_clock::now();
-                MashPlacement::kplacementDeviceArrays.findPlacementTreeBME(params, MashPlacement::mashDeviceArrays, MashPlacement::matrixReader, MashPlacement::msaDeviceArrays);
-                auto createTreeEnd = std::chrono::high_resolution_clock::now();
-                std::chrono::nanoseconds createTreeTime = createTreeEnd - createTreeStart; 
-                MashPlacement::kplacementDeviceArrays.printTree(names, output_);
-                std::cerr << "Tree Created in: " <<  createTreeTime.count()/1000000 << " ms\n";
-                MashPlacement::mashDeviceArrays.deallocateDeviceArrays();
-                MashPlacement::kplacementDeviceArrays.deallocateDeviceArrays();
-            }
             else{
                 std::cerr<<"Using k-closest placement mode\n";
                 MashPlacement::kplacementDeviceArrays.allocateDeviceArrays(numSequences);
                 auto createTreeStart = std::chrono::high_resolution_clock::now();
-                MashPlacement::kplacementDeviceArrays.findPlacementTree(params, MashPlacement::mashDeviceArrays, MashPlacement::matrixReader, MashPlacement::msaDeviceArrays);
+                int whichMetric = 2; // 0: ME, 1: BME, 2: RMSE
+                if (whichMetric == 0) {
+                    std::cerr<<"Using ME metric\n";
+                    MashPlacement::kplacementDeviceArrays.findPlacementTree(params, MashPlacement::mashDeviceArrays, MashPlacement::matrixReader, MashPlacement::msaDeviceArrays);
+                }
+                else if (whichMetric == 1) {
+                    std::cerr<<"Using BME metric\n";
+                    MashPlacement::kplacementDeviceArrays.findPlacementTreeBME(params, MashPlacement::mashDeviceArrays, MashPlacement::matrixReader, MashPlacement::msaDeviceArrays);
+                }
+                else if (whichMetric == 2) {
+                    std::cerr<<"Using RMSE metric\n";
+                    MashPlacement::kplacementDeviceArrays.findPlacementTreeRMSE(params, MashPlacement::mashDeviceArrays, MashPlacement::matrixReader, MashPlacement::msaDeviceArrays);
+                }
                 auto createTreeEnd = std::chrono::high_resolution_clock::now();
                 std::chrono::nanoseconds createTreeTime = createTreeEnd - createTreeStart; 
                 MashPlacement::kplacementDeviceArrays.printTree(names, output_);

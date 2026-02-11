@@ -67,6 +67,8 @@ if(USE_CUDA)
                         src/tree.cpp
                         src/neighborJoining.cu
                         src/placement_close_k.cu
+                        src/placement_close_k_bme.cu
+                        src/placement_close_k_rmse.cu
                         src/divide_and_conquer/mash.cu
                         src/divide_and_conquer/mash.cpp
                         src/divide_and_conquer/msa.cu
