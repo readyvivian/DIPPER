@@ -59,7 +59,7 @@ __global__ void calculateBranchLengthRMSE(
         int cnt_u=0, cnt_v=0;
         for(int i=0;i<5;i++)
             if(closest_id[eid*5+i]!=-1){
-                val = dis[closest_id[eid*5+i]]-closest_dis[eid*5+i];
+                val = abs(dis[closest_id[eid*5+i]]-closest_dis[eid*5+i]);
                 mean_u += val;
                 cnt_u++;
             }
@@ -68,7 +68,7 @@ __global__ void calculateBranchLengthRMSE(
         while(e[otheid]!=x) assert(otheid!=-1),otheid=nxt[otheid];
         for(int i=0;i<5;i++)
             if(closest_id[otheid*5+i]!=-1){
-                val = dis[closest_id[otheid*5+i]]-closest_dis[otheid*5+i];
+                val = abs(dis[closest_id[otheid*5+i]]-closest_dis[otheid*5+i]);
                 mean_v += val;
                 cnt_v++;
             }
