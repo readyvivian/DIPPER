@@ -48,7 +48,7 @@ __global__ void updateClosestNodesBME(
                         closest_branches[i*5+k]=closest_branches[i*5+k-1];
                     }
                     // printf("%d: (%d %lf)\t", i*5+j, x, d);
-                    printf("%d: level %d\n", i*5+j, level);
+                    // printf("%d: level %d\n", i*5+j, level);
                     closest_dis[i*5+j]=d;
                     closest_id[i*5+j]=x;
                     closest_branches[i*5+j]=level;
@@ -438,7 +438,7 @@ void MashPlacement::KPlacementDeviceArrays::findPlacementTreeBME(
         //     iter++;
         // } 
         thrust::tuple<int,double,double,double> s = smallest;
-        std::cerr<<thrust::get<0>(s)<<" "<<thrust::get<1>(s)<<" "<<thrust::get<2>(s)<<" "<<thrust::get<3>(s)<<'\n';
+        // std::cerr<<thrust::get<0>(s)<<" "<<thrust::get<1>(s)<<" "<<thrust::get<2>(s)<<" "<<thrust::get<3>(s)<<'\n';
         
         /*
         Update Tree (and assign closest nodes to newly added nodes)

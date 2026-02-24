@@ -278,7 +278,7 @@ void MashPlacement::KPlacementDeviceArrays::findPlacementTreeRMSE(
         //     iter++;
         // } 
         thrust::tuple<int,double,double,double> s = smallest;
-        std::cerr<<thrust::get<0>(s)<<" "<<thrust::get<1>(s)<<" "<<thrust::get<2>(s)<<" "<<thrust::get<3>(s)<<'\n';
+        // std::cerr<<thrust::get<0>(s)<<" "<<thrust::get<1>(s)<<" "<<thrust::get<2>(s)<<" "<<thrust::get<3>(s)<<'\n';
         
         /*
         Update Tree (and assign closest nodes to newly added nodes)
