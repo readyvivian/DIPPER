@@ -39,19 +39,19 @@ __global__ void updateClosestNodesBME(
         for(int i=head[node];i!=-1;i=nxt[i]){
             // printf("%d %d: \n", node, head[node]);
             if(e[i]==fb) continue;
-            for(int j=0;j<5;j++){
-                double nowd=closest_dis[i*5+j];
+            for(int j=0;j<HALF_K;j++){
+                double nowd=closest_dis[i*HALF_K+j];
                 if(nowd>d){
-                    for(int k=4;k>j;k--){
-                        closest_dis[i*5+k]=closest_dis[i*5+k-1];
-                        closest_id[i*5+k]=closest_id[i*5+k-1];
-                        closest_branches[i*5+k]=closest_branches[i*5+k-1];
+                    for(int k=HALF_K-1;k>j;k--){
+                        closest_dis[i*HALF_K+k]=closest_dis[i*HALF_K+k-1];
+                        closest_id[i*HALF_K+k]=closest_id[i*HALF_K+k-1];
+                        closest_branches[i*HALF_K+k]=closest_branches[i*HALF_K+k-1];
                     }
                     // printf("%d: (%d %lf)\t", i*5+j, x, d);
                     // printf("%d: level %d\n", i*5+j, level);
-                    closest_dis[i*5+j]=d;
-                    closest_id[i*5+j]=x;
-                    closest_branches[i*5+j]=level;
+                    closest_dis[i*HALF_K+j]=d;
+                    closest_id[i*HALF_K+j]=x;
+                    closest_branches[i*HALF_K+j]=level;
                     id[++r]=e[i],dis[r]=d+len[i],from[r]=node,next_end=r;
                     break;
                 }
@@ -77,10 +77,10 @@ __global__ void initializeBME(
     int idx=tx+bs*bx;
     for (int t=idx; t<lim; t+=bs*gs){
         if(t<lim){
-            for(int i=0;i<5;i++){
-                d_closest_dis[t*5+i]=2;
-                d_closest_id[t*5+i]=-1;
-                d_closest_branches[t*5+i]=INT_MAX;
+            for(int i=0;i<HALF_K;i++){
+                d_closest_dis[t*HALF_K+i]=2;
+                d_closest_id[t*HALF_K+i]=-1;
+                d_closest_branches[t*HALF_K+i]=INT_MAX;
             }
             nxt[t] = -1;
             e[t] = -1;
@@ -134,21 +134,21 @@ __global__ void calculateBranchLengthBME(
         int eid=idx,otheid;
         double dis1=0, dis2=0, val, bme_score=0;
         int valid_closest=0;
-        for(int i=0;i<5;i++)
-            if(closest_id[eid*5+i]!=-1){
-                val = dis[closest_id[eid*5+i]]-closest_dis[eid*5+i];
+        for(int i=0;i<HALF_K;i++)
+            if(closest_id[eid*HALF_K+i]!=-1){
+                val = dis[closest_id[eid*HALF_K+i]]-closest_dis[eid*HALF_K+i];
                 if(val>dis1) dis1=val;
                 valid_closest++;
-                bme_score += dis[closest_id[eid*5+i]] * pow(0.5, closest_branches[eid*5+i]);
+                bme_score += dis[closest_id[eid*HALF_K+i]] * pow(0.5, closest_branches[eid*HALF_K+i]);
             }
         otheid=head[oth];
         while(e[otheid]!=x) assert(otheid!=-1),otheid=nxt[otheid];
-        for(int i=0;i<5;i++)
-            if(closest_id[otheid*5+i]!=-1){
-                val = dis[closest_id[otheid*5+i]]-closest_dis[otheid*5+i];
+        for(int i=0;i<HALF_K;i++)
+            if(closest_id[otheid*HALF_K+i]!=-1){
+                val = dis[closest_id[otheid*HALF_K+i]]-closest_dis[otheid*HALF_K+i];
                 if(val>dis2) dis2=val;
                 valid_closest++;
-                bme_score += dis[closest_id[otheid*5+i]] * pow(0.5, closest_branches[otheid*5+i]);
+                bme_score += dis[closest_id[otheid*HALF_K+i]] * pow(0.5, closest_branches[otheid*HALF_K+i]);
             }
         double additional_dis=(dis1+dis2-len[eid])/2;
         if(additional_dis<0) additional_dis=0;
@@ -208,22 +208,22 @@ __global__ void updateTreeStructureBME(
     */
     //middle -> x
     e[edgeCount]=x,len[edgeCount]=fracLen,nxt[edgeCount]=head[middle],head[middle]=edgeCount,belong[edgeCount]=middle;
-    for(int i=0;i<5;i++)
-        if(closest_id[ye*5+i]!=-1){
-            closest_id[edgeCount*5+i]=closest_id[ye*5+i];
-            closest_dis[edgeCount*5+i]=closest_dis[ye*5+i]+originalDis-fracLen;
-            int br = closest_branches[ye*5+i];
-            closest_branches[edgeCount*5+i] = (br==INT_MAX)?INT_MAX:br+1;
+    for(int i=0;i<HALF_K;i++)
+        if(closest_id[ye*HALF_K+i]!=-1){
+            closest_id[edgeCount*HALF_K+i]=closest_id[ye*HALF_K+i];
+            closest_dis[edgeCount*HALF_K+i]=closest_dis[ye*HALF_K+i]+originalDis-fracLen;
+            int br = closest_branches[ye*HALF_K+i];
+            closest_branches[edgeCount*HALF_K+i] = (br==INT_MAX)?INT_MAX:br+1;
         }
     edgeCount++;
     //middle -> y
     e[edgeCount]=y,len[edgeCount]=originalDis-fracLen,nxt[edgeCount]=head[middle],head[middle]=edgeCount,belong[edgeCount]=middle;
-    for(int i=0;i<5;i++)
-        if(closest_id[xe*5+i]!=-1){
-            closest_id[edgeCount*5+i]=closest_id[xe*5+i];
-            closest_dis[edgeCount*5+i]=closest_dis[xe*5+i]+fracLen;
-            int br = closest_branches[xe*5+i];
-            closest_branches[edgeCount*5+i] = (br==INT_MAX)?INT_MAX:br+1;
+    for(int i=0;i<HALF_K;i++)
+        if(closest_id[xe*HALF_K+i]!=-1){
+            closest_id[edgeCount*HALF_K+i]=closest_id[xe*HALF_K+i];
+            closest_dis[edgeCount*HALF_K+i]=closest_dis[xe*HALF_K+i]+fracLen;
+            int br = closest_branches[xe*HALF_K+i];
+            closest_branches[edgeCount*HALF_K+i] = (br==INT_MAX)?INT_MAX:br+1;
         }
     edgeCount++;
     //outside -> middle
@@ -232,33 +232,33 @@ __global__ void updateTreeStructureBME(
     //middle -> outside
     e[edgeCount]=outside,len[edgeCount]=addLen,nxt[edgeCount]=head[middle],head[middle]=edgeCount,belong[edgeCount]=middle;
     int e1=edgeCount-2, e2=edgeCount-3;
-    for(int i=0;i<5;i++){
-        if(closest_id[e1*5+i]==-1) break;
-        for(int j=0;j<5;j++)
-            if(closest_dis[edgeCount*5+j]>closest_dis[e1*5+i]){
-                for(int k=4;k>j;k--){
-                    closest_dis[edgeCount*5+k]=closest_dis[edgeCount*5+k-1];
-                    closest_id[edgeCount*5+k]=closest_id[edgeCount*5+k-1];
-                    closest_branches[edgeCount*5+k]=closest_branches[edgeCount*5+k-1];
+    for(int i=0;i<HALF_K;i++){
+        if(closest_id[e1*HALF_K+i]==-1) break;
+        for(int j=0;j<HALF_K;j++)
+            if(closest_dis[edgeCount*HALF_K+j]>closest_dis[e1*HALF_K+i]){
+                for(int k=HALF_K-1;k>j;k--){
+                    closest_dis[edgeCount*HALF_K+k]=closest_dis[edgeCount*HALF_K+k-1];
+                    closest_id[edgeCount*HALF_K+k]=closest_id[edgeCount*HALF_K+k-1];
+                    closest_branches[edgeCount*HALF_K+k]=closest_branches[edgeCount*HALF_K+k-1];
                 }
-                closest_dis[edgeCount*5+j]=closest_dis[e1*5+i];
-                closest_id[edgeCount*5+j]=closest_id[e1*5+i];
-                closest_branches[edgeCount*5+j]=closest_branches[e1*5+i];
+                closest_dis[edgeCount*HALF_K+j]=closest_dis[e1*HALF_K+i];
+                closest_id[edgeCount*HALF_K+j]=closest_id[e1*HALF_K+i];
+                closest_branches[edgeCount*HALF_K+j]=closest_branches[e1*HALF_K+i];
                 break;
             }
     }
-    for(int i=0;i<5;i++){
-        if(closest_id[e2*5+i]==-1) break;
-        for(int j=0;j<5;j++)
-            if(closest_dis[edgeCount*5+j]>closest_dis[e2*5+i]){
-                for(int k=4;k>j;k--){
-                    closest_dis[edgeCount*5+k]=closest_dis[edgeCount*5+k-1];
-                    closest_id[edgeCount*5+k]=closest_id[edgeCount*5+k-1];
-                    closest_branches[edgeCount*5+k]=closest_branches[edgeCount*5+k-1];
+    for(int i=0;i<HALF_K;i++){
+        if(closest_id[e2*HALF_K+i]==-1) break;
+        for(int j=0;j<HALF_K;j++)
+            if(closest_dis[edgeCount*HALF_K+j]>closest_dis[e2*HALF_K+i]){
+                for(int k=HALF_K-1;k>j;k--){
+                    closest_dis[edgeCount*HALF_K+k]=closest_dis[edgeCount*HALF_K+k-1];
+                    closest_id[edgeCount*HALF_K+k]=closest_id[edgeCount*HALF_K+k-1];
+                    closest_branches[edgeCount*HALF_K+k]=closest_branches[edgeCount*HALF_K+k-1];
                 }
-                closest_dis[edgeCount*5+j]=closest_dis[e2*5+i];
-                closest_id[edgeCount*5+j]=closest_id[e2*5+i];
-                closest_branches[edgeCount*5+j]=closest_branches[e2*5+i];
+                closest_dis[edgeCount*HALF_K+j]=closest_dis[e2*HALF_K+i];
+                closest_id[edgeCount*HALF_K+j]=closest_id[e2*HALF_K+i];
+                closest_branches[edgeCount*HALF_K+j]=closest_branches[e2*HALF_K+i];
                 break;
             }
     }
@@ -487,4 +487,7 @@ void MashPlacement::KPlacementDeviceArrays::findPlacementTreeBME(
     }
     std::cerr << "Distance Operation Time " <<  disTime.count()/1000000 << " ms\n";
     std::cerr << "Tree Operation Time " <<  treeTime.count()/1000000 << " ms\n";
+
+    // RMSE sanity check
+    this->computeTreeRMSE(params, mashDeviceArrays, matrixReader, msaDeviceArrays);
 }

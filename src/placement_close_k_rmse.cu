@@ -13,6 +13,7 @@
 #include <fstream>
 #include <cub/cub.cuh>
 #include <limits.h>
+#include <cmath>
 
 struct compare_tuple_RMSE {
   __host__ __device__
@@ -57,27 +58,37 @@ __global__ void calculateBranchLengthRMSE(
         int eid=idx,otheid;
         double mean_u=0, mean_v=0, val;
         int cnt_u=0, cnt_v=0;
-        for(int i=0;i<5;i++)
-            if(closest_id[eid*5+i]!=-1){
-                val = abs(dis[closest_id[eid*5+i]]-closest_dis[eid*5+i]);
+        for(int i=0;i<HALF_K;i++)
+            if(closest_id[eid*HALF_K+i]!=-1){
+                // val = abs(dis[closest_id[eid*5+i]]-closest_dis[eid*5+i]);
+                val = dis[closest_id[eid*HALF_K+i]]-closest_dis[eid*HALF_K+i];
                 mean_u += val;
                 cnt_u++;
             }
         if(cnt_u>0) mean_u /= cnt_u;
         otheid=head[oth];
         while(e[otheid]!=x) assert(otheid!=-1),otheid=nxt[otheid];
-        for(int i=0;i<5;i++)
-            if(closest_id[otheid*5+i]!=-1){
-                val = abs(dis[closest_id[otheid*5+i]]-closest_dis[otheid*5+i]);
+        for(int i=0;i<HALF_K;i++)
+            if(closest_id[otheid*HALF_K+i]!=-1){
+                // val = abs(dis[closest_id[otheid*5+i]]-closest_dis[otheid*5+i]);
+                val = dis[closest_id[otheid*HALF_K+i]]-closest_dis[otheid*HALF_K+i];
                 mean_v += val;
                 cnt_v++;
             }
         if(cnt_v>0) mean_v /= cnt_v;
+        // printf("mean_u: %.4lf, mean_v: %.4lf\n", mean_u, mean_v);
 
         double additional_dis=(mean_u+mean_v-len[eid])/2;
         double dis1=(len[eid]+mean_u-mean_v)/2;
+
+        // new clamp:
+        // if(additional_dis<0) dis1+=additional_dis, additional_dis=0;
+        // if(dis1<0) additional_dis+=dis1, dis1=0;
+        // if(dis1>len[eid]) additional_dis+=dis1-len[eid], dis1=len[eid];
+        // double dis2=len[eid]-dis1;
+        
+        // old clamp:
         double dis2=len[eid]-dis1;
-        // clamp:
         if(additional_dis<0) additional_dis=0;
         if(dis1<0) dis1=0;
         if(dis2<0) dis2=0;
@@ -89,20 +100,23 @@ __global__ void calculateBranchLengthRMSE(
         if(additional_dis<0) additional_dis=0;
         
         double mse = 0;
-        int cnt = 0;
-        for(int i=0;i<5;i++)
-            if(closest_id[eid*5+i]!=-1){
-                val = additional_dis+dis1-dis[closest_id[eid*5+i]]+closest_dis[eid*5+i];
+        for(int i=0;i<HALF_K;i++)
+            if(closest_id[eid*HALF_K+i]!=-1){
+                val = additional_dis+dis1-dis[closest_id[eid*HALF_K+i]]+closest_dis[eid*HALF_K+i];
                 mse += val*val;
-                cnt++;
             }
-        for(int i=0;i<5;i++)
-            if(closest_id[otheid*5+i]!=-1){
-                val = additional_dis+dis2-dis[closest_id[otheid*5+i]]+closest_dis[otheid*5+i];
+        for(int i=0;i<HALF_K;i++)
+            if(closest_id[otheid*HALF_K+i]!=-1){
+                val = additional_dis+dis2-dis[closest_id[otheid*HALF_K+i]]+closest_dis[otheid*HALF_K+i];
                 mse += val*val;
-                cnt++;
             }
-        if (cnt>0) mse /= cnt;
+        // if (cnt_u == 0 || cnt_v == 0) {
+        //     thrust::tuple <int,double,double,double> bad(eid,dis1,additional_dis,1e30);
+        //     minPos[idx]=bad;
+        //     continue;
+        // }
+        int cnt = cnt_u + cnt_v;
+        if (cnt > 0) mse /= cnt;
         thrust::tuple <int,double,double,double> minTuple(eid,dis1,additional_dis,mse);
         minPos[idx]=minTuple;
     }
@@ -325,4 +339,57 @@ void MashPlacement::KPlacementDeviceArrays::findPlacementTreeRMSE(
     }
     std::cerr << "Distance Operation Time " <<  disTime.count()/1000000 << " ms\n";
     std::cerr << "Tree Operation Time " <<  treeTime.count()/1000000 << " ms\n";
+    
+    // RMSE sanity check
+    this->computeTreeRMSE(params, mashDeviceArrays, matrixReader, msaDeviceArrays);
+}
+
+void MashPlacement::KPlacementDeviceArrays::computeTreeRMSE(
+    Param& params,
+    const MashDeviceArrays& mashDeviceArrays,
+    MatrixReader& matrixReader,
+    const MSADeviceArrays& msaDeviceArrays
+){
+    int n = numSequences, nodes = n * 2;
+    std::vector<int> h_head(nodes), h_nxt(n*4-4), h_e(n*4-4);
+    std::vector<double> h_len(n*4-4);
+    cudaMemcpy(h_head.data(), d_head, nodes * sizeof(int), cudaMemcpyDeviceToHost);
+    cudaMemcpy(h_nxt.data(), d_nxt, (n*4-4) * sizeof(int), cudaMemcpyDeviceToHost);
+    cudaMemcpy(h_e.data(), d_e, (n*4-4) * sizeof(int), cudaMemcpyDeviceToHost);
+    cudaMemcpy(h_len.data(), d_len, (n*4-4) * sizeof(double), cudaMemcpyDeviceToHost);
+
+    double * h_row = new double[n];
+    double mse_sum = 0.0;
+    long long pairCount = 0;
+    
+    for(int u = 0; u < n; u++){
+        if(params.in == "d") matrixReader.distConstructionOnGpu(params, u, d_dist);
+        else if(params.in == "r") mashDeviceArrays.distConstructionOnGpu(params, u, d_dist);
+        else if(params.in == "m") msaDeviceArrays.distConstructionOnGpu(params, u, d_dist);
+        if(u == 0) continue;
+        cudaMemcpy(h_row, d_dist, u * sizeof(double), cudaMemcpyDeviceToHost);
+        
+        std::vector<double> dist(nodes, -1.0);
+        std::vector<int> parent(nodes, -1);
+        std::vector<int> stack = {u};
+        dist[u] = 0.0;
+        while(!stack.empty()){
+            int cur = stack.back(); stack.pop_back();
+            for(int ei = h_head[cur]; ei != -1; ei = h_nxt[ei]){
+                int nb = h_e[ei];
+                if(parent[cur] == nb) continue;
+                parent[nb] = cur;
+                dist[nb] = dist[cur] + h_len[ei];
+                stack.push_back(nb);
+            }
+        }
+        for(int v = 0; v < u; v++){
+            double diff = dist[v] - h_row[v];
+            mse_sum += diff * diff;
+            pairCount++;
+        }
+    }
+    delete [] h_row;
+    double rmse = std::sqrt(mse_sum / pairCount);
+    std::cerr << "Final tree RMSE: " << rmse << "\n";
 }

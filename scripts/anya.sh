@@ -5,7 +5,7 @@ MAPLE=/home/swalia@AD.UCSD.EDU/tools/MAPLE/MAPLEv0.3.6.py
 DIPPER=/home/v8wang@AD.UCSD.EDU/DIPPER/bin/dipper
 
 OUTPUT_DIR=/home/v8wang@AD.UCSD.EDU/DIPPER/output
-OUTPUT_NAME=tree_pl.nwk
+OUTPUT_NAME=tree_0302.nwk
 
 
 $DIPPER -i r -I $SOURCE -O $OUTPUT_DIR/$OUTPUT_NAME -m 1

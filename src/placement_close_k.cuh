@@ -1,5 +1,7 @@
 #pragma once
 
+#define HALF_K 30
+
 __global__ void initializeID(
     int lim,
     double * d_closest_dis,
